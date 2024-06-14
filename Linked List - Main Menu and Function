@@ -30,25 +30,26 @@ int main() {
         //Eto ung choices sa 1-6
             printf("\nEnter choices: ");
             scanf("%d", &choice);
-    } 
+     
         switch (choice){
          //Enter elements ng list    
             case 1: 
                 if (listCreated){
                     printf("List already created.\n");
                 } else { 
-                    int arr[n];
+                    
             
                     printf("How many elements to insert initially? ");
                     scanf("%d", &n);
-                    
+                    int arr[n];
                     printf("Enter Elements: ");
+                    for ( i = 0; i < n; i++){
                     scanf("%d", &arr[i]);
                 }
+                    createList (&head, arr,n); 
+                    listCreated = 1; 
+                }
                 //tangina neto ano problema mo (Hindi ko siya maayos, kayo na bahala umiyak na ako eh)
-        //    createList(&head, arr, n); 
-                listCreated = 1; 
-        
                 break;
         case 2: 
         //Pag tumuloy tuloy si ante eto lalabas
@@ -59,7 +60,7 @@ int main() {
                 }
                 break;
         case 3: 
-        //Add number to insert
+        //Add number to insert in sorted
                 if (!listCreated){
                     printf("Create list first.\n");
                 } else {
@@ -97,7 +98,8 @@ int main() {
                     printf("Exiting the program");
             exit(0);
         default:
-                    printf("Invalid input. Please try again.\n");    
+                printf("Invalid input. Please try again.\n");    
+    }
 }
 return 0;
 
@@ -111,7 +113,70 @@ void mainMenu(){
     printf("\n4. Delete a number from the Linear Linked List\n");
     printf("\n5. Search a number\n");
     printf("\n6. Exit\n");
- 
-
 }
 
+//create list 
+
+void createList(Node **head, int arr[], int n){
+    for (int i=0; i<n; i++){
+        insertNum (head, arr[i]);
+    }
+}
+//display
+void displayList(Node *head){
+     Node* temp = head; 
+    while (temp != NULL){
+        printf("%d ->", temp->data);
+    }
+    printf("NULL\n");
+}
+
+//insert num on sort
+void insertNum(Node **head, int data){
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    Node* current;
+    newNode->data=data;
+    newNode->next=NULL;
+
+    if (*head == NULL || (*head)->data >= newNode->data){
+        newNode->next = *head; 
+        *head = newNode;
+    } else {
+        current = *head;
+        while (current->next != NULL && current->next->data < newNode->data){
+            current = current->next;
+        }
+        newNode->next = current->next;
+        current->next = newNode;
+
+    }
+
+}
+//delete
+void delteNum(Node **head, int key){
+     Node* temp = *head, *prev = NULL; 
+    if (temp != NULL && temp->data == key){
+        *head = temp->next;
+        free(temp);
+        return;
+    }
+
+     while (temp != NULL && temp->data != key){
+        prev = temp;
+        temp = temp->next;
+     }
+    
+    if (temp == NULL) return; 
+    free(temp);
+
+}
+//search
+int searchNum(Node *head, int key){
+    Node* current = head;
+    while (current != NULL){
+            if (current->data == key)
+                return 1;
+            current = current->next;
+    }
+    return 0;
+}
