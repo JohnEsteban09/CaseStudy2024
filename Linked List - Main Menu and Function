@@ -49,7 +49,7 @@ int main() {
                     createList (&head, arr,n); 
                     listCreated = 1; 
                 }
-                //tangina neto ano problema mo (Hindi ko siya maayos, kayo na bahala umiyak na ako eh)
+                //Iniyakan ko tong part na toh
                 break;
         case 2: 
         //Pag tumuloy tuloy si ante eto lalabas
