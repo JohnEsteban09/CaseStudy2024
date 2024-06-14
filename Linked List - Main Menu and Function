@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+//Node struct 
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+
+} Node;
+
+//Function proto (subject to change let's roll with this muna, para lang gumana at makita ko ung menu)
+
+void createList (Node** head, int arr[], int n);
+void displayList (Node* head);
+void insertNum (Node** head, int data);
+void delteNum (Node** head, int key);
+int searchNum (Node* head, int key);
+void mainMenu();
+
+//Main
+int main() {
+    Node* head = NULL; 
+    int choice, data, n, i;
+    int listCreated = 0;
+
+    while(1) {
+        mainMenu();
+        //Eto ung choices sa 1-6
+            printf("\nEnter choices: ");
+            scanf("%d", &choice);
+    } 
+        switch (choice){
+         //Enter elements ng list    
+            case 1: 
+                if (listCreated){
+                    printf("List already created.\n");
+                } else { 
+                    int arr[n];
+            
+                    printf("How many elements to insert initially? ");
+                    scanf("%d", &n);
+                    
+                    printf("Enter Elements: ");
+                    scanf("%d", &arr[i]);
+                }
+                //tangina neto ano problema mo (Hindi ko siya maayos, kayo na bahala umiyak na ako eh)
+        //    createList(&head, arr, n); 
+                listCreated = 1; 
+        
+                break;
+        case 2: 
+        //Pag tumuloy tuloy si ante eto lalabas
+                if (!listCreated){
+                    printf("Create list first.\n");
+                }else {
+                    displayList(head);
+                }
+                break;
+        case 3: 
+        //Add number to insert
+                if (!listCreated){
+                    printf("Create list first.\n");
+                } else {
+                    char cont = 'Y'; 
+                    while (toupper(cont)=='Y'){
+                        printf("Enter the number to insert: ");
+                        scanf("%d", &data);
+                            insertNum(&head, data);
+                        printf("Do you want to insert another number? (Y/N): ");
+                        scanf("%c", &cont);
+                    }
+                }
+                break;
+            case 4: 
+            //Delete number
+                if (!listCreated){
+                     printf("Creat list first.\n");
+                } else { 
+                    printf("Enter the number to delete: ");
+                    scanf("%d", &data);
+                    delteNum(&head, data);
+                }
+                break;
+            case 5: 
+            //Search number
+            if (!listCreated){
+                    printf("Create list first.\n");
+        } else {
+                    printf("Enter the number to search: ");
+
+        }
+                break;
+            case 6:
+            //Exit program tapos invalid 
+                    printf("Exiting the program");
+            exit(0);
+        default:
+                    printf("Invalid input. Please try again.\n");    
+}
+return 0;
+
+}
+//Menu display 
+void mainMenu(){
+    printf("\nMAIN MENU\n");
+    printf("\n1. Create a Linear Linked List\n");
+    printf("\n2. Display a Linear Linked List\n");
+    printf("\n3. Insert a number in the Linear Linked List\n");
+    printf("\n4. Delete a number from the Linear Linked List\n");
+    printf("\n5. Search a number\n");
+    printf("\n6. Exit\n");
+ 
+
+}
+
