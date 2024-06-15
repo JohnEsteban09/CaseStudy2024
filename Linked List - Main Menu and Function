@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+//Notes: Please debug once fully completed na ung program. I think may ibang points dito na magulo. 
+
 //Node struct 
 
 typedef struct Node {
@@ -52,7 +54,7 @@ int main() {
                 //Iniyakan ko tong part na toh
                 break;
         case 2: 
-        //Pag tumuloy tuloy si ante eto lalabas
+        //Pag tumuloy tuloy si ante  ng walang list eto lalabas
                 if (!listCreated){
                     printf("Create list first.\n");
                 }else {
@@ -94,7 +96,7 @@ int main() {
         }
                 break;
             case 6:
-            //Exit program tapos invalid 
+            //Exit program and pag may invalid 
                     printf("Exiting the program");
             exit(0);
         default:
@@ -116,22 +118,24 @@ void mainMenu(){
 }
 
 //create list 
-
+//Okay and working
 void createList(Node **head, int arr[], int n){
     for (int i=0; i<n; i++){
         insertNum (head, arr[i]);
     }
 }
-//display
+//display // parang may prob din dito na needs debugging. 
 void displayList(Node *head){
      Node* temp = head; 
     while (temp != NULL){
-        printf("%d ->", temp->data);
+        printf("%d ", temp->data);
+        temp = temp->next;
     }
-    printf("NULL\n");
+ 
 }
 
 //insert num on sort
+//Parang may problem dito hindi ko mahanap saan
 void insertNum(Node **head, int data){
     Node* newNode = (Node*)malloc(sizeof(Node));
     Node* current;
@@ -153,6 +157,7 @@ void insertNum(Node **head, int data){
 
 }
 //delete
+//afaik, works well, but double check
 void delteNum(Node **head, int key){
      Node* temp = *head, *prev = NULL; 
     if (temp != NULL && temp->data == key){
@@ -171,6 +176,7 @@ void delteNum(Node **head, int key){
 
 }
 //search
+//same goes here, double check, may kulang pa ito for print. Leaving this for the people incharge. 
 int searchNum(Node *head, int key){
     Node* current = head;
     while (current != NULL){
@@ -180,3 +186,4 @@ int searchNum(Node *head, int key){
     }
     return 0;
 }
+
