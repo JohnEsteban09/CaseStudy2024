@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void mainMenu();
+void transactionMenu();
+
+int main() {
+    while (1) {
+        mainMenu();
+    }
+    return 0;
+}
+
+void mainMenu() {
+    int choice;
+    printf("\nMain Menu\n");
+    printf("1. Transaction Menu\n");
+    printf("2. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1:
+            transactionMenu();
+            break;
+        case 2:
+            printf("Exiting the program.\n");
+            exit(0);
+            break;
+        default:
+            printf("Invalid choice, please try again.\n");
+    }
+}
+
+void transactionMenu() {
+    int choice;
+    while (1) {
+        printf("\nTransaction Menu\n");
+        printf("1. Deposit\n");
+        printf("2. Withdraw\n");
+        printf("3. Balance Inquiry\n");
+        printf("4. Return to Main Menu\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Deposit selected.\n");
+                // for deposit
+                break;
+            case 2:
+                printf("Withdraw selected.\n");
+                // for withdraw
+                break;
+            case 3:
+                printf("Balance Inquiry selected.\n");
+                // for balance inquiry
+                break;
+            case 4:
+                return;
+            default:
+                printf("Invalid choice, please try again.\n");
+        }
+    }
+}
