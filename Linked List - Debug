@@ -1,0 +1,215 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+//Notes: Please debug once fully completed na ung program. I think may ibang points dito na magulo.
+
+//Node struct
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+
+} Node;
+
+//Function proto (subject to change let's roll with this muna, para lang gumana at makita ko ung menu)
+
+void createList (Node** head, int arr[], int n);
+void displayList (Node* head);
+void insertNum (Node** head, int data);
+void delteNum (Node** head, int key);
+int searchNum (Node* head, int key);
+void mainMenu();
+
+//Main
+int main() {
+    Node* head = NULL;
+    int choice, data, n, i, nsear;
+    int listCreated = 0;
+    char cont;
+
+    while(1) {
+        mainMenu();
+        //Eto ung choices sa 1-6
+            printf("\n\nEnter choices: ");
+            scanf("%d", &choice);
+
+        switch (choice){
+         //Enter elements ng list
+            case 1:
+                if (listCreated){
+                    printf("List already created.\n");
+                } else {
+
+
+                    printf("\nHow many elements to insert initially? ");
+                    scanf("%d", &n);
+                    int arr[n];
+                    printf("Enter Elements: ");
+                    for ( i = 0; i < n; i++){
+                    scanf("%d", &arr[i]);
+                }
+                    createList (&head, arr,n);
+                    listCreated = 1;
+                }
+                //Iniyakan ko tong part na toh
+                break;
+        case 2:
+        //Pag tumuloy tuloy si ante  ng walang list eto lalabas
+                if (!listCreated){
+                    printf("Create list first.\n");
+                }else {
+                    displayList(head);
+                }
+                break;
+        case 3:
+        //Add number to insert in sorted
+                if (!listCreated){
+                    printf("Create list first.\n");
+                } else {
+                    char cont = 'Y';
+                    while (toupper(cont)=='Y'){
+                        printf("Enter the number to insert: ");
+                        scanf("%d", &data);
+                            insertNum(&head, data);
+                            displayList(head);
+                        printf("Do you want to insert another number? (Y/N): ");
+                        scanf("%s", &cont);
+                    }
+                }
+                break;
+            case 4:
+            //Delete number
+                if (!listCreated){
+                     printf("Creat list first.\n");
+                } else {
+                    printf("Enter the number to delete: ");
+                    scanf("%d", &data);
+                    delteNum(&head, data);
+
+                    printf("List after deleting %d: ", data);
+                    //will fix this later
+                }
+                break;
+            case 5:
+            //Search number
+            if (!listCreated){
+                    printf("Create list first.\n");
+        } else {
+                    printf("Enter the number to search: ");
+                    scanf("%d", nsear);
+
+        }
+                break;
+            case 6:
+            //Exit program and pag may invalid
+                    printf("Exiting the program");
+            exit(0);
+        default:
+                printf("Invalid input. Please try again.\n");
+    }
+}
+return 0;
+
+}
+//Menu display
+void mainMenu(){
+    printf("\nMAIN MENU\n");
+    printf("\n1. Create a Linear Linked List\n");
+    printf("\n2. Display a Linear Linked List\n");
+    printf("\n3. Insert a number in the Linear Linked List\n");
+    printf("\n4. Delete a number from the Linear Linked List\n");
+    printf("\n5. Search a number\n");
+    printf("\n6. Exit\n");
+}
+
+//create list
+//Okay and working
+void createList(Node **head, int arr[], int n){
+    for (int i=0; i<n; i++){
+        insertNum (head, arr[i]);
+    }
+}
+
+//display // parang may prob din dito na needs debugging.
+void displayList(Node *head) {
+    Node* temp = head;
+    if (temp == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+
+    printf("The Linear Linked List contains: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+//insert num on sort
+//Parang may problem dito hindi ko mahanap saan
+ void insertNum(Node **head, int data) {
+    // Allocate memory for the new node
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed\n");
+        return;
+    }
+
+    newNode->data = data;
+    newNode->next = NULL;
+
+    // Special case: Insert at the beginning or if the list is empty
+    if (*head == NULL || data < (*head)->data) {
+        newNode->next = *head;
+        *head = newNode;
+        return;
+    }
+
+    Node* current = *head;
+
+    // Find the correct position to insert the new node
+    while (current->next != NULL && current->next->data < data) {
+        current = current->next;
+    }
+
+    // Insert the new node into the list
+    newNode->next = current->next;
+    current->next = newNode;
+}
+
+
+//delete
+//afaik, works well, but double check
+void delteNum(Node **head, int key){
+     Node* temp = *head, *prev = NULL;
+    if (temp != NULL && temp->data == key){
+        *head = temp->next;
+        free(temp);
+        return;
+    }
+
+     while (temp != NULL && temp->data != key){
+        prev = temp;
+        temp = temp->next;
+     }
+
+    if (temp == NULL) return;
+    free(temp);
+}
+//search
+//same goes here, double check, may kulang pa ito for print. Leaving this for the people incharge.
+int searchNum(Node *head, int key) {
+    Node* current = head;
+    while (current != NULL) {
+        if (current->data == key) {
+            printf("%d is in the list\n", key);
+            return 1;
+        }
+        current = current->next;
+    }
+    printf("%d is not in the list\n", key);
+    return 0;
+}
+
