@@ -1,8 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h> 
+
+#define MAX_USERS 1000
+#define USERNAME_LENGTH 50
+#define PASSWORD_LENGTH 50 
+
+typedef struct {
+    char username[USERNAME_LENGTH];
+    char password[PASSWORD_LENGTH];
+} User;
+
+User users[MAX_USERS];
+int userCount = 0;
+User *currentUser = NULL;
 
 void mainMenu();
 void transactionMenu();
+void registerUser();
+void loginUser();
 
 int main() {
     while (1) {
@@ -30,6 +46,56 @@ void mainMenu() {
         default:
             printf("Invalid choice, please try again.\n");
     }
+}
+
+void registerUser() {
+    if (userCount >= MAX_USERS) {
+        printf("User limit reached. Cannot register more users.\n");
+        return;
+    }
+
+char username[USERNAME_LENGTH];
+    char password[PASSWORD_LENGTH];
+
+printf("Enter a username: ");
+    scanf("%s", username);
+    printf("Enter a password: ");
+    scanf("%s", password);
+
+    // Check if username already exists
+    for (int i = 0; i < userCount; i++) {
+        if (strcmp(users[i].username, username) == 0) {
+            printf("Username already exists. Please try again.\n");
+            return;
+        }
+    }
+
+strcpy(users[userCount].username, username);
+    strcpy(users[userCount].password, password);
+    userCount++;
+
+    printf("User registered successfully.\n");
+}
+
+void loginUser() {
+    char username[USERNAME_LENGTH];
+    char password[PASSWORD_LENGTH];
+
+    printf("Enter your username: ");
+    scanf("%s", username);
+    printf("Enter your password: ");
+    scanf("%s", password);
+
+    for (int i = 0; i < userCount; i++) {
+        if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0) {
+            currentUser = &users[i];
+            printf("Login successful.\n");
+            transactionMenu();
+            return;
+        }
+    }
+
+    printf("Invalid username or password. Please try again.\n");
 }
 
 void transactionMenu() {
