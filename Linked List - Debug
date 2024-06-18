@@ -162,7 +162,7 @@ void displayList(Node *head) {
     newNode->data = data;
     newNode->next = NULL;
 
-    // Special case: Insert at the beginning or if the list is empty
+    // special case: insert at the beginning or if the list is empty
     if (*head == NULL || data < (*head)->data) {
         newNode->next = *head;
         *head = newNode;
@@ -171,12 +171,12 @@ void displayList(Node *head) {
 
     Node* current = *head;
 
-    // Find the correct position to insert the new node
+    // find the correct position to insert the new node
     while (current->next != NULL && current->next->data < data) {
         current = current->next;
     }
 
-    // Insert the new node into the list
+    // insert the new node into the list
     newNode->next = current->next;
     current->next = newNode;
 }
@@ -213,7 +213,7 @@ int searchNum(Node *head, int key) {
     }
     printf("%d is not in the list\n", key);
     return 0;
-
+//added print for both condition na.
     printf("%d is not in the list\n", key);
     return 0;
 }
