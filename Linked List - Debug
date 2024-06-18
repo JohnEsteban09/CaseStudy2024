@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-//Notes: Please debug once fully completed na ung program. I think may ibang points dito na magulo.
-//Notes from Sofia - may problem sa deletion pag gusto mo idisplay. Pati ung insert, Kaya sinabi ko may problem ung display funct.
+//Notes: So far walang bugs, sa susunod na mag dedebug, double check nalang - Sof
 
 //Node struct
 
@@ -13,8 +12,7 @@ typedef struct Node {
 
 } Node;
 
-//Function proto (subject to change let's roll with this muna, para lang gumana at makita ko ung menu)
-
+//Function proto 
 void createList (Node** head, int arr[], int n);
 void displayList (Node* head);
 void insertNum (Node** head, int data);
@@ -53,7 +51,6 @@ int main() {
                     createList (&head, arr,n);
                     listCreated = 1;
                 }
-                //Iniyakan ko tong part na toh
                 break;
         case 2:
         //Pag tumuloy tuloy si ante  ng walang list eto lalabas
@@ -129,14 +126,13 @@ void mainMenu(){
 }
 
 //create list
-//Okay and working
 void createList(Node **head, int arr[], int n){
     for (int i=0; i<n; i++){
         insertNum (head, arr[i]);
     }
 }
 
-//display // parang may prob din dito na needs debugging.
+//display 
 void displayList(Node *head) {
     Node* temp = head;
     if (temp == NULL) {
@@ -153,7 +149,6 @@ void displayList(Node *head) {
 }
 
 //insert num on sort
-//Parang may problem dito hindi ko mahanap saan
  void insertNum(Node **head, int data) {
     // Allocate memory for the new node
     Node* newNode = (Node*)malloc(sizeof(Node));
@@ -186,7 +181,6 @@ void displayList(Node *head) {
 
 
 //delete
-//afaik, works well, but double check
 void delteNum(Node **head, int key){
      Node* temp = *head, *prev = NULL;
     if (temp != NULL && temp->data == key){
@@ -205,7 +199,6 @@ void delteNum(Node **head, int key){
     free(temp);
 }
 //search
-//same goes here, double check, may kulang pa ito for print. Leaving this for the people incharge.
 int searchNum(Node *head, int key) {
     Node* current = head;
     while (current != NULL) {
