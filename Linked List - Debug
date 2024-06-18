@@ -97,7 +97,8 @@ int main() {
                     printf("Create list first.\n");
         } else {
                     printf("Enter the number to search: ");
-                    scanf("%d", nsear);
+                    scanf("%d", &nsear);
+                    searchNum(head, nsear);
 
         }
                 break;
@@ -209,6 +210,11 @@ int searchNum(Node *head, int key) {
         }
         current = current->next;
     }
+    printf("%d is not in the list\n", key);
+    return 0;
+}
+
+
     printf("%d is not in the list\n", key);
     return 0;
 }
