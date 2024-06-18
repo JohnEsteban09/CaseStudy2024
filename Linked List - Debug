@@ -46,7 +46,7 @@ int main() {
                     printf("\nHow many elements to insert initially? ");
                     scanf("%d", &n);
                     int arr[n];
-                    printf("Enter Elements: ");
+                    printf("\nEnter Elements: ");
                     for ( i = 0; i < n; i++){
                     scanf("%d", &arr[i]);
                 }
@@ -60,6 +60,7 @@ int main() {
                 if (!listCreated){
                     printf("Create list first.\n");
                 }else {
+                    printf("\n");
                     displayList(head);
                 }
                 break;
@@ -70,11 +71,12 @@ int main() {
                 } else {
                     char cont = 'Y';
                     while (toupper(cont)=='Y'){
-                        printf("Enter the number to insert: ");
+                        printf("\nEnter the number to insert: ");
                         scanf("%d", &data);
+                            printf("\n");
                             insertNum(&head, data);
                             displayList(head);
-                        printf("Do you want to insert another number? (Y/N): ");
+                        printf("\nDo you want to insert another number? (Y/N): ");
                         scanf("%s", &cont);
                     }
                 }
@@ -84,12 +86,12 @@ int main() {
                 if (!listCreated){
                      printf("Creat list first.\n");
                 } else {
-                    printf("Enter the number to delete: ");
+                    printf("\nEnter the number to delete: ");
                     scanf("%d", &data);
-                    delteNum(&head, data);
 
-                    printf("List after deleting %d: ", data);
-                    //will fix this later
+                    printf("\nList after deleting %d: ", data);
+                    delteNum(&head, data);
+                    displayList(head);
                 }
                 break;
             case 5:
@@ -97,15 +99,16 @@ int main() {
             if (!listCreated){
                     printf("Create list first.\n");
         } else {
-                    printf("Enter the number to search: ");
+                    printf("\nEnter the number to search: ");
                     scanf("%d", &nsear);
+                    printf("\n");
                     searchNum(head, nsear);
 
         }
                 break;
             case 6:
             //Exit program and pag may invalid
-                    printf("Exiting the program");
+                    printf("\nExiting the program");
             exit(0);
         default:
                 printf("Invalid input. Please try again.\n");
@@ -116,7 +119,7 @@ return 0;
 }
 //Menu display
 void mainMenu(){
-    printf("\nMAIN MENU\n");
+    printf("\n\n\nMAIN MENU\n");
     printf("\n1. Create a Linear Linked List\n");
     printf("\n2. Display a Linear Linked List\n");
     printf("\n3. Insert a number in the Linear Linked List\n");
@@ -197,6 +200,7 @@ void delteNum(Node **head, int key){
         temp = temp->next;
      }
 
+     prev->next = temp->next; // adjust 'yung next pointer of the previous node.
     if (temp == NULL) return;
     free(temp);
 }
