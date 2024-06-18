@@ -212,8 +212,6 @@ int searchNum(Node *head, int key) {
     }
     printf("%d is not in the list\n", key);
     return 0;
-}
-
 
     printf("%d is not in the list\n", key);
     return 0;
