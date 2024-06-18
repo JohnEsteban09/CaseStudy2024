@@ -3,6 +3,7 @@
 #include <ctype.h>
 
 //Notes: Please debug once fully completed na ung program. I think may ibang points dito na magulo.
+//Notes from Sofia - may problem sa deletion pag gusto mo idisplay. Pati ung insert, Kaya sinabi ko may problem ung display funct.
 
 //Node struct
 
