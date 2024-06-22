@@ -5,7 +5,6 @@
 //Notes: So far walang bugs, sa susunod na mag dedebug, double check nalang - Sof
 
 //Node struct
-
 typedef struct Node {
     int data;
     struct Node* next;
@@ -39,14 +38,12 @@ int main() {
                 if (listCreated){
                     printf("List already created.\n");
                 } else {
-
-
                     printf("\nHow many elements to insert initially? ");
-                    scanf("%d", &n);
+                    	scanf("%d", &n);
                     int arr[n];
                     printf("\nEnter Elements: ");
                     for ( i = 0; i < n; i++){
-                    scanf("%d", &arr[i]);
+                    	scanf("%d", &arr[i]);
                 }
                     createList (&head, arr,n);
                     listCreated = 1;
@@ -58,7 +55,7 @@ int main() {
                     printf("Create list first.\n");
                 }else {
                     printf("\n");
-                    displayList(head);
+                    	displayList(head);
                 }
                 break;
         case 3:
@@ -69,46 +66,47 @@ int main() {
                     char cont = 'Y';
                     while (toupper(cont)=='Y'){
                         printf("\nEnter the number to insert: ");
-                        scanf("%d", &data);
-                            printf("\n");
+                        	scanf("%d", &data);
+                        printf("\n");
                             insertNum(&head, data);
                             displayList(head);
                         printf("\nDo you want to insert another number? (Y/N): ");
-                        scanf("%s", &cont);
+                        	scanf("%s", &cont);
                     }
                 }
                 break;
             case 4:
-            //Delete number
+            //Delete number 
                 if (!listCreated){
-                     printf("Creat list first.\n");
+                     printf("Create link first.\n");
                 } else {
                     printf("\nEnter the number to delete: ");
-                    scanf("%d", &data);
+                    	scanf("%d", &data);
 
                     printf("\nList after deleting %d: ", data);
-                    delteNum(&head, data);
-                    displayList(head);
+                    	delteNum(&head, data);
+                    	displayList(head);
                 }
+
                 break;
             case 5:
-            //Search number
+            //Search number 
             if (!listCreated){
                     printf("Create list first.\n");
         } else {
                     printf("\nEnter the number to search: ");
-                    scanf("%d", &nsear);
+                    	scanf("%d", &nsear);
                     printf("\n");
-                    searchNum(head, nsear);
+                    	searchNum(head, nsear);
 
         }
                 break;
             case 6:
-            //Exit program and pag may invalid
+            //Exit program and pag may invalid input from user 
                     printf("\nExiting the program");
             exit(0);
         default:
-                printf("Invalid input. Please try again.\n");
+                printf("\nInvalid input. Please try again.\n");
     }
 }
 return 0;
@@ -140,7 +138,7 @@ void displayList(Node *head) {
         return;
     }
 
-    printf("The Linear Linked List contains: ");
+    printf("\nThe Linear Linked List contains: ");
     while (temp != NULL) {
         printf("%d ", temp->data);
         temp = temp->next;
@@ -183,15 +181,19 @@ void displayList(Node *head) {
 //delete
 void delteNum(Node **head, int key){
      Node* temp = *head, *prev = NULL;
+    
     if (temp != NULL && temp->data == key){
         *head = temp->next;
         free(temp);
         return;
     }
-
-     while (temp != NULL && temp->data != key){
+    while (temp != NULL && temp->data != key){
         prev = temp;
         temp = temp->next;
+     } //If wala ung idedelete mo na number sa list. 
+     if (temp == NULL){
+        printf("\nThe number %d is not in the list.\n", key);
+        return;
      }
 
      prev->next = temp->next; // adjust 'yung next pointer of the previous node.
@@ -203,15 +205,14 @@ int searchNum(Node *head, int key) {
     Node* current = head;
     while (current != NULL) {
         if (current->data == key) {
-            printf("%d is in the list\n", key);
+            printf("\n%d is in the list\n", key);
             return 1;
         }
         current = current->next;
     }
-    printf("%d is not in the list\n", key);
+    printf("\n%d is not in the list\n", key);
     return 0;
 //added print for both condition na.
-    printf("%d is not in the list\n", key);
+    printf("\n%d is not in the list\n", key);
     return 0;
 }
-
