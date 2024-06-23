@@ -236,7 +236,7 @@ if (!found && tries >= MAX_TRIES) {
 
             // Prompt for receipt after balance inquiry
             char responseB;
-            printf("Do you wish to print a receipt for balance inquiry? (Y/N): ");
+            printf("Do you wish to print a receipt for balance inquiry? (Y for Yes and N for No): ");
             scanf(" %c", &responseB);
             if (responseB == 'Y' || responseB == 'y') {
                 // Print receipt for balance inquiry
@@ -263,7 +263,7 @@ if (!found && tries >= MAX_TRIES) {
 
             // Prompt for receipt after deposit
             char responseD;
-            printf("Do you wish to print a receipt for deposit? (Y/N): ");
+            printf("Do you wish to print a receipt for deposit? (Y for Yes and N for No): ");
             scanf(" %c", &responseD);
             if (responseD == 'Y' || responseD == 'y') {
                 // Print receipt for deposit
@@ -294,7 +294,7 @@ if (!found && tries >= MAX_TRIES) {
 
                 // Prompt for receipt after withdrawal
                 char responseW;
-                printf("Do you wish to print a receipt for withdrawal? (Y/N): ");
+                printf("Do you wish to print a receipt for withdrawal? (Y for Yes and N for No): ");
                 scanf(" %c", &responseW);
                 if (responseW == 'Y' || responseW == 'y') {
                     // Print receipt for withdrawal
