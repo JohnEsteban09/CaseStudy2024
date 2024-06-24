@@ -1,4 +1,4 @@
-// CASE STUDY - GROUP 2 - DEBUG AND OPTIMIZE THEN FINALIZE - NUMBER_2_LINKED_LIST
+// CASE STUDY - GROUP 2 - NUMBER_2_LINKED_LIST
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +8,7 @@
 
 
 /* NOTES: 
-    - Code's Latest Update: [06-23-2024, 3:13 PM] 
+    - Code's Latest Update: [06-25-2024, 12:52 AM] 
 */
 
 
@@ -74,7 +74,7 @@ void clearBuffer() { // Function to clear the input buffer
 }
 
 void pause() { // Function to pause the program until the user presses a key
-    printf("\n[Press any key to continue...]");
+    printf("\n-[Press any key to continue...]-");
     getch();
 }
 
@@ -105,7 +105,7 @@ char mainMenu() {
         // Check if the choice is between 'A' and 'F'
         if (head == NULL && choice > 'A' && choice < 'F') {
             validChoice = false;
-            printf("No linked list exists. Please create a linked list first.\n");
+            printf("[NO LINKED LIST EXISTS]\n\nPlease create a linked list first.\n");
             pause();
         } else if (choice < 'A' || choice > 'F') {
             validChoice = false;
@@ -138,7 +138,7 @@ void createLinkedList() {
             clearBuffer();
             validInput = true;
 
-            Node *newNode = malloc(sizeof(Node)); // Allocate memory for a new node
+            Node *newNode = (Node *)malloc(sizeof(Node)); // Allocate memory for a new node
             if (newNode == NULL) {
                 printf("[Error]: Memory allocation failed!\n");
                 exit(1);
@@ -165,7 +165,6 @@ void createLinkedList() {
         } else {
             clearBuffer();
             validInput = false;
-            printf("\nInvalid choice. (Enter an integer)\n");
         }
     } while (validInput);
 
@@ -206,7 +205,7 @@ void insertNum() {
         if (scanf(" %d", &num) == 1) {
             clearBuffer();
 
-            newNode = malloc(sizeof(Node));
+            newNode = (Node *)malloc(sizeof(Node));
             if (newNode == NULL) {
                 printf("[Error]: Memory allocation failed!\n");
                 exit(1);
@@ -233,7 +232,7 @@ void insertNum() {
             printf("\nNumber inserted successfully.\n");
         } else {
             clearBuffer();
-            printf("Wrong input!\n\n");
+            printf("[Error]: Invalid input!\n\n");
         }
 
         printf("Do you want to insert another number? (Y/N): ");
@@ -242,6 +241,10 @@ void insertNum() {
         choice = toupper(choice);
 
         printf("----------------------------------------------------------------------\n");
+        
+        if (choice != 'Y' && choice != 'N') {
+            printf("[Error]: Invalid choice!\n");
+        }
     } while (choice == 'Y');
 }
 
@@ -267,8 +270,8 @@ void deleteNum() {
         printf("Enter the number to delete: ");
         if (scanf(" %d", &num) != 1) {
             clearBuffer();
-            printf("Invalid input!\n");
             printf("\n----------------------------------------------------------------------\n");
+            printf("[Error]: Invalid input!\n");
             return;
         }
         clearBuffer();
@@ -305,12 +308,27 @@ void deleteNum() {
             printf("\nAll occurrences of number %d deleted successfully.\n", num);
         }
 
-        printf("Do you want to delete another number? (Y/N): ");
+        printf("Do you want to delete another number? (Y / N), or the entire list (L):  ");
         scanf(" %c", &choice);
         clearBuffer();
         choice = toupper(choice);
 
         printf("----------------------------------------------------------------------\n");
+
+        if (choice != 'Y' && choice != 'N' && choice != 'L') {
+            printf("[Error]: Invalid choice!\n");
+        } else if (choice == 'L') {
+            // Deleting the entire list
+            current = head;
+            while (current != NULL) {
+                temp = current;
+                current = current->next;
+                free(temp);
+            }
+            head = NULL;
+            printf("THE LIST HAS BEEN DELETED SUCCESSFULLY.\n");
+            break; // Exit the loop after deleting the entire list
+        }
     } while (choice == 'Y');
 }
 
@@ -339,8 +357,8 @@ void searchNum() {
         printf("Enter the number to search: ");
         if (scanf(" %d", &num) != 1) {
             clearBuffer();
-            printf("\nInvalid input!\n");
             printf("\n----------------------------------------------------------------------\n");
+            printf("[Error]: Invalid input!\n");
             return;
         }
         clearBuffer();
@@ -365,5 +383,9 @@ void searchNum() {
         choice = toupper(choice);
 
         printf("----------------------------------------------------------------------\n");
+
+        if (choice != 'Y' && choice != 'N') {
+            printf("[Error]: Invalid choice!\n");
+        }
     } while (choice == 'Y');
 }
