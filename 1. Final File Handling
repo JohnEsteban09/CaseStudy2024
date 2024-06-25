@@ -11,7 +11,7 @@
 
 
 /* NOTES: 
-    - Code's Latest Update: [06-25-2024, 9:21 AM] 
+    - Code's Latest Update: [06-25-2024, 9:48 AM] 
 */
 
 // Struct definition
@@ -255,108 +255,138 @@ void transactionProcessing() {
 
     char transactionCode;
     double amount;
-    printf("-------------------------------------------------------------------------------------\n");
-    printf("Enter transaction code (B for Balance Inquiry, D for Deposit, W for Withdrawal): ");
-    scanf(" %c", &transactionCode);
-    clearInputBuffer();
-    transactionCode = toupper(transactionCode);
-    acc.transactionCode = transactionCode;
+    bool back = false;
 
-    switch (transactionCode) {
-        case 'B':
-            printf("\nAccount Balance:  %.2f\n", acc.balance);
+    do {
+        system("cls");
+        printf("-------------------------------------------------------------------------------------\n");
+        printf("-=[ Transaction Menu ]=-\n");
+        printf("-------------------------------------------------------------------------------------\n");
+        printf("B - Balance Inquiry\n");
+        printf("D - Deposit\n");
+        printf("W - Withdrawal\n");
+        printf("E - Exit to Main Menu\n");
+        printf("-------------------------------------------------------------------------------------\n");
+        printf("Please select an option: ");
+        scanf(" %c", &transactionCode);
+        clearInputBuffer();
+        transactionCode = toupper(transactionCode);
+        acc.transactionCode = transactionCode;
 
-            // Prompt for receipt after balance inquiry
-            char responseB;
-            printf("Do you wish to print a receipt for balance inquiry? (Y for Yes and N for No): ");
-            scanf(" %c", &responseB);
-            clearInputBuffer();
-            responseB = toupper(responseB);
-            
-            if (responseB == 'Y') {
-                // Print receipt for balance inquiry
-                printf("-------------------------------------------------------------------------------------\n");
-                printf("\n=========== RECEIPT ===========\n");
-                printf("\nAccount Number: %s\n", acc.accountNumber);
-                printf("Account Name: %s\n", acc.accountName);
-                printf("\nTransaction Type: %c\n", acc.transactionCode);
-                printf("Transaction Amount: %.2f\n", acc.amount);
-                printf("\n\nNew Balance: %.2f\n", acc.balance);
-                printf("\n\nThank you for using PUPB! :)\n");
-                printf("===============================\n\n");
-            }
-            break;
-        case 'D':
-            printf("\nEnter deposit amount: ");
-            if (scanf(" %lf", &amount) != 1) {
+        switch (transactionCode) {
+            case 'B':
+                printf("\nAccount Balance:  %.2f\n", acc.balance);
+
+                // Prompt for receipt after balance inquiry
+                char responseB;
+                printf("Do you wish to print a receipt for balance inquiry? (Y for Yes and N for No): ");
+                scanf(" %c", &responseB);
                 clearInputBuffer();
-                printf("Invalid input. Please enter a valid deposit amount.\n");
-                break;
-            }
-            acc.amount = amount;
-            acc.balance += amount;
-            printf("Deposit successful. New balance is: %.2f\n", acc.balance);
-
-            // Prompt for receipt after deposit
-            char responseD;
-            printf("Do you wish to print a receipt for deposit? (Y for Yes and N for No): ");
-            scanf(" %c", &responseD);
-            clearInputBuffer();
-            if (responseD == 'Y' || responseD == 'y') {
-                // Print receipt for deposit
-                printf("-------------------------------------------------------------------------------------\n");
-                printf("\n=========== RECEIPT ===========\n");
-                printf("\nAccount Number: %s\n", acc.accountNumber);
-                printf("Account Name: %s\n", acc.accountName);
-                printf("\nTransaction Type: %c\n", acc.transactionCode);
-                printf("Transaction Amount: %.2f\n", acc.amount);
-                printf("\n\nOld Balance: %.2f\n", acc.balance - acc.amount);
-                printf("New Balance: %.2f\n", acc.balance);
-                printf("\n\nThank you for using PUPB! :)\n");
-                printf("===============================\n\n");
-            }
-            break;
-        case 'W':
-            printf("\nEnter withdrawal amount: ");
-            if (scanf(" %lf", &amount) != 1) {
-                clearInputBuffer();
-                printf("Invalid input. Please enter a valid withdrawal amount.\n");
-                pause();
-                break;
-            }
-            if (amount > acc.balance) {
-                printf("Not enough funds. Transaction is not allowed.\n");
-                pause();
-            } else {
-                acc.amount = amount;
-                acc.balance -= amount;
-                printf("Withdrawal successful. New Balance is: %.2f\n", acc.balance);
-
-                // Prompt for receipt after withdrawal
-                char responseW;
-                printf("Do you wish to print a receipt for withdrawal? (Y for Yes and N for No): ");
-                scanf(" %c", &responseW);
-                clearInputBuffer();
-                if (responseW == 'Y' || responseW == 'y') {
-                    // Print receipt for withdrawal
+                responseB = toupper(responseB);
+                
+                if (responseB == 'Y') {
+                    // Print receipt for balance inquiry
                     printf("-------------------------------------------------------------------------------------\n");
                     printf("\n=========== RECEIPT ===========\n");
                     printf("\nAccount Number: %s\n", acc.accountNumber);
                     printf("Account Name: %s\n", acc.accountName);
                     printf("\nTransaction Type: %c\n", acc.transactionCode);
                     printf("Transaction Amount: %.2f\n", acc.amount);
-                    printf("\n\nOld Balance: %.2f\n", acc.balance + acc.amount);
+                    printf("\n\nNew Balance: %.2f\n", acc.balance);
+                    printf("\n\nThank you for using PUPB! :)\n");
+                    printf("===============================\n\n");
+                    printf("-------------------------------------------------------------------------------------\n");
+                    pause();
+                }
+                break;
+            case 'D':
+                printf("\nEnter deposit amount: ");
+                if (scanf(" %lf", &amount) != 1) {
+                    clearInputBuffer();
+                    printf("Invalid Input. Please enter a valid deposit amount.\n");
+                    printf("-------------------------------------------------------------------------------------\n");
+                    pause();
+                    break;
+                } else if (amount < 0) {
+                    clearInputBuffer();
+                    printf("Invalid Deposit Amount. Please enter a positive amount.\n");
+                    printf("-------------------------------------------------------------------------------------\n");
+                    pause();
+                    break;
+                }
+                acc.amount = amount;
+                acc.balance += amount;
+                printf("Deposit successful. New balance is: %.2f\n", acc.balance);
+
+                // Prompt for receipt after deposit
+                char responseD;
+                printf("\nDo you wish to print a receipt for deposit? (Y for Yes and N for No): ");
+                scanf(" %c", &responseD);
+                clearInputBuffer();
+                if (responseD == 'Y' || responseD == 'y') {
+                    // Print receipt for deposit
+                    printf("-------------------------------------------------------------------------------------\n");
+                    printf("\n=========== RECEIPT ===========\n");
+                    printf("\nAccount Number: %s\n", acc.accountNumber);
+                    printf("Account Name: %s\n", acc.accountName);
+                    printf("\nTransaction Type: %c\n", acc.transactionCode);
+                    printf("Transaction Amount: %.2f\n", acc.amount);
+                    printf("\n\nOld Balance: %.2f\n", acc.balance - acc.amount);
                     printf("New Balance: %.2f\n", acc.balance);
                     printf("\n\nThank you for using PUPB! :)\n");
                     printf("===============================\n\n");
+                    printf("-------------------------------------------------------------------------------------\n");
+                    pause();
                 }
-            }
-            break;
-        default:
-            printf("Invalid transaction code.\n");
-            fclose(file);
-            return;
-    }
+                break;
+            case 'W':
+                printf("\nEnter withdrawal amount: ");
+                if (scanf(" %lf", &amount) != 1) {
+                    clearInputBuffer();
+                    printf("Invalid input. Please enter a valid withdrawal amount.\n");
+                    pause();
+                    break;
+                }
+                if (amount > acc.balance) {
+                    printf("Not enough funds. Transaction is not allowed.\n");
+                    pause();
+                } else {
+                    acc.amount = amount;
+                    acc.balance -= amount;
+                    printf("Withdrawal successful. New Balance is: %.2f\n", acc.balance);
+
+                    // Prompt for receipt after withdrawal
+                    char responseW;
+                    printf("Do you wish to print a receipt for withdrawal? (Y for Yes and N for No): ");
+                    scanf(" %c", &responseW);
+                    clearInputBuffer();
+                    if (responseW == 'Y' || responseW == 'y') {
+                        // Print receipt for withdrawal
+                        printf("-------------------------------------------------------------------------------------\n");
+                        printf("\n=========== RECEIPT ===========\n");
+                        printf("\nAccount Number: %s\n", acc.accountNumber);
+                        printf("Account Name: %s\n", acc.accountName);
+                        printf("\nTransaction Type: %c\n", acc.transactionCode);
+                        printf("Transaction Amount: %.2f\n", acc.amount);
+                        printf("\n\nOld Balance: %.2f\n", acc.balance + acc.amount);
+                        printf("New Balance: %.2f\n", acc.balance);
+                        printf("\n\nThank you for using PUPB! :)\n");
+                        printf("===============================\n\n");
+                        printf("-------------------------------------------------------------------------------------\n");
+                        pause();
+                    }
+                }
+                break;
+            case 'E':
+                back = true;
+                break;
+            default:
+                printf("-------------------------------------------------------------------------------------\n");
+                printf("\n[Invalid Choice].\n");
+                pause();
+        }
+    } while (!back);
+    
 
     // Update the account record
     fseek(file, -sizeof(Account), SEEK_CUR);
