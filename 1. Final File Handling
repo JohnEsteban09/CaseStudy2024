@@ -11,7 +11,7 @@
 
 
 /* NOTES: 
-    - Code's Latest Update: [06-25-2024, 9:48 AM] 
+    - Code's Latest Update: [06-25-2024, 9:21 AM] 
 */
 
 // Struct definition
@@ -291,8 +291,7 @@ void transactionProcessing() {
                     printf("\nAccount Number: %s\n", acc.accountNumber);
                     printf("Account Name: %s\n", acc.accountName);
                     printf("\nTransaction Type: %c\n", acc.transactionCode);
-                    printf("Transaction Amount: %.2f\n", acc.amount);
-                    printf("\n\nNew Balance: %.2f\n", acc.balance);
+                    printf("\n\nAccount Balance: %.2f\n", acc.balance);
                     printf("\n\nThank you for using PUPB! :)\n");
                     printf("===============================\n\n");
                     printf("-------------------------------------------------------------------------------------\n");
@@ -357,7 +356,7 @@ void transactionProcessing() {
 
                     // Prompt for receipt after withdrawal
                     char responseW;
-                    printf("Do you wish to print a receipt for withdrawal? (Y for Yes and N for No): ");
+                    printf("\nDo you wish to print a receipt for withdrawal? (Y for Yes and N for No): ");
                     scanf(" %c", &responseW);
                     clearInputBuffer();
                     if (responseW == 'Y' || responseW == 'y') {
