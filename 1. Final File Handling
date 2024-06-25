@@ -1,15 +1,24 @@
+// CASE STUDY - GROUP 2 - NUMBER_1_FILE_HANDLING
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdbool.h>
 
 #define FILENAME "PUPACCOUNTS.DAT" // Data of the Users
 #define MAX_TRIES 3 // Maximum of input retries
 
+
+/* NOTES: 
+    - Code's Latest Update: [06-25-2024, 3:16 AM] 
+*/
+
 // Struct definition
-typedef struct {
-    char accountNumber[11];    // Account Number
-    char accountName[26];      // Account Name 
-    char pin[7];               // Account PIN (Changed to accommodate NULL terminator)
+typedef struct Account {
+    char accountNumber[10];    // Account Number
+    char accountName[25];      // Account Name 
+    int pin;                   // Account PIN
     double deposit;            // Initial deposit
     char transactionCode;      // B for Balance, D for Deposit, and W for Withdraw
     double amount;             // Transaction amount
@@ -22,16 +31,12 @@ void createAccounts();
 void transactionProcessing();
 void printRecords();
 void mainMenu();
-int validateAccountNumber(const char *accountNumber);
-int validatePIN(const char *pin);
 void clearScreen();
 void clearInputBuffer();
+void pause();
 
 int main() {
-    while (1) {
-        mainMenu();
-    }
-    return 0;
+    mainMenu();
 }
 
 // Clear the screen function
@@ -48,213 +53,244 @@ void clearInputBuffer() {
     while (getchar() != '\n');
 }
 
+void pause() { // Function to pause the program until the user presses a key
+    printf("\n-[Press any key to continue...]-");
+    getch();
+}
+
 // Main Menu 
 void mainMenu() {
     int choice;
-    printf("\n -- Welcome to PUP Bank Quezon City Branch! --\n");
-    printf("\n[---- Main Menu ----]\n\n");
-    printf("1. Create an Account\n");
-    printf("2. Transaction Process\n");
-    printf("3. Print Records\n");
-    printf("4. Exit\n\n");
-    printf("Please select a number: ");
 
-    if (scanf("%d", &choice) != 1) {
-        printf("Invalid input. Please select a number.\n");
+    while (1) {
+        clearScreen();
+        printf("---------------------------------------------------------\n");
+        printf("|\tWelcome to PUP Bank Quezon City Branch! \t|\n");
+        printf("---------------------------------------------------------\n");
+        printf("-=[ Main Menu ]=-\n\n");
+        printf("1. Create an Account\n");
+        printf("2. Transaction Process\n");
+        printf("3. Print Records\n");
+        printf("4. Exit\n");
+        printf("---------------------------------------------------------\n");
+        printf("Please select an option: ");
+        scanf(" %d", &choice);
         clearInputBuffer();
-        return;
-    }
 
-    clearScreen(); // Clear screen before executing the chosen option
-
-    // Selection Menu 
-    switch (choice) {
-        case 1:
-            createAccounts();
-            break;
-        case 2:
-            transactionProcessing();
-            break;
-        case 3:
-            printRecords();
-            break;
-        case 4:
-          	return;
-        default:
-            printf("Invalid number, please try again.\n");
+        // Selection Menu 
+        switch (choice) {
+            case 1:
+                createAccounts();
+                break;
+            case 2:
+                transactionProcessing();
+                break;
+            case 3:
+                printRecords();
+                break;
+            case 4:
+                printf("\n[PROGRAM TERMINATED]\n");
+                printf("--------------------------------------------------------");
+                exit(0);
+            default:
+                printf("\nInvalid choice. (Enter a number from 1 to 4)\n");
+                break;
+        }
+        printf("--------------------------------------------------------");
+        pause();
     }
 }
 
 // Create Accounts
 void createAccounts() {
-    FILE *file = fopen(FILENAME, "ab");
-    if (!file) {
-        perror("Error opening file.");
+    clearScreen();
+    FILE *file = fopen(FILENAME, "a+");
+    if (file == NULL) {
+        printf("Unable to sign up at this current time. Please check back later!\n");
+        pause();
         return;
     }
 
-    printf("\n\n[---- Account Creation ----]\n\n");
     Account acc;
-    while (1) {
-        printf("\nEnter an account number (Must be 10 characters, type 'end' to finish): ");
-        scanf("%10s", acc.accountNumber);
-        if (strcmp(acc.accountNumber, "end") == 0) break;
-        if (!validateAccountNumber(acc.accountNumber)) {
-            printf("Invalid account number. Must be 10 characters long.\n");
-            clearInputBuffer();
-            continue;
-        }
+    Account tempAcc;
+    printf("---------------------------------------------------------\n");
+    printf("-=[ Account Creation ]=-\n");
+    printf("---------------------------------------------------------\n");
+    printf("(type 'end' to finish)\n");
+    printf("\nEnter Account Number: ");
+    scanf(" %10s", acc.accountNumber);
+    clearInputBuffer();
 
-        printf("Enter an account name: ");
-        scanf(" %25[^\n]", acc.accountName); // Read account name with spaces
-
-        printf("Enter your PIN (must be 6 digits): ");
-        scanf("%6s", acc.pin);
-        if (!validatePIN(acc.pin)) {
-            printf("Invalid PIN. Must be exactly 6 digits.\n");
-            clearInputBuffer();
-            continue;
-        }        
-
-        printf("Enter initial deposit: ");
-        if (scanf("%lf", &acc.deposit) != 1) {
-            printf("Invalid input. Please enter a valid deposit amount.\n");
-            clearInputBuffer();
-            continue;
-        }
-
-        printf("Enter account type (savings, checking, or investment): ");
-        scanf(" %19s", acc.accountType); 
-
-        acc.balance = acc.deposit;
-        acc.transactionCode = 'B';
-        acc.amount = 0.0;
-
-        fwrite(&acc, sizeof(Account), 1, file);
-        printf("Account created successfully.\n");
-    }
-
-    fclose(file);
-    clearScreen(); // Clear screen after event
-}
-
-// Validate Account Number
-int validateAccountNumber(const char *accountNumber) {
-    return strlen(accountNumber) == 10;
-}
-
-// Validate PIN
-int validatePIN(const char *pin) {
-    return strlen(pin) == 6;
-}
-
-// Transaction Processing
-void transactionProcessing() {
-    FILE *file = fopen(FILENAME, "rb+");
-    if (!file) {
-        perror("Error opening file");
-        return;
-    }
-
-    printf("\n[---- Transaction Process ----]\n");
-
-    char accountNumber[11], pin[7];
-    Account acc;
-    int found = 0, tries = 0;
-
-    printf("\nEnter account number: ");
-    scanf("%10s", accountNumber);
-    if (!validateAccountNumber(accountNumber)) {
-        printf("Invalid account number. Must be 10 characters long.\n");
+    if (strcmp(acc.accountNumber, "end") == 0) {
         fclose(file);
         return;
     }
 
-  // Validate PIN
-while (tries < MAX_TRIES) {
-    printf("Enter PIN: ");
-    scanf("%6s", pin);
-    clearInputBuffer(); // Clear the input buffer
-
-    if (!validatePIN(pin)) {
-        printf("Invalid PIN. Must be exactly 6 digits.\n");
-        tries++;
-        if (tries < MAX_TRIES) {
-            printf("You have %d chance%s left to enter your PIN.\n", MAX_TRIES - tries, (MAX_TRIES - tries > 1) ? "s" : "");
+    // Check if the account number already exists
+    bool accountFound = false;
+    rewind(file); // Reset file pointer to the beginning
+    while (fread(&tempAcc, sizeof(Account), 1, file)) {
+        if (strcmp(tempAcc.accountNumber, acc.accountNumber) == 0) {
+            accountFound = true;
+            break;
         }
-        continue;
     }
 
-    rewind(file);
-    found = 0; 
-    while (fread(&acc, sizeof(Account), 1, file)) {
-        if (strcmp(acc.accountNumber, accountNumber) == 0 && strcmp(acc.pin, pin) == 0) {
-            printf("VALID PIN! Welcome, %s\n", acc.accountName);
+    if (accountFound) {
+        printf("---------------------------------------------------------\n");
+        printf("[Existing Account]\nPlease login to your account.\n");
+    } else {
+        printf("Enter Account Name: ");
+        scanf(" %25s", acc.accountName);
+        clearInputBuffer();
+
+        int validInput;
+
+        do {
+            printf("Enter your PIN (up to 6 digits): ");
+            validInput = scanf("%d", &acc.pin);
+            clearInputBuffer();
+
+            if (validInput == 0) {
+                printf("\n[ Invalid PIN ]\n\n");
+            }
+        } while(!validInput);
+
+
+        do {
+            printf("Enter Initial Deposit: ");
+            validInput = scanf("%lf", &acc.deposit);
+            clearInputBuffer();
+
+            if (validInput == 0) {
+                printf("\n[ Invalid Deposit Amount ]\n\n");
+            }
+        } while(!validInput);
+
+        printf("Enter account type (savings, checking, or investment): ");
+        scanf(" %19s", acc.accountType);
+        clearInputBuffer();
+
+        acc.balance = acc.deposit;
+        acc.transactionCode = 'B';
+        acc.amount = 0.0;
+        
+        fwrite(&acc, sizeof(Account), 1, file);
+        printf("\nAccount created successfully.\n");
+    }
+
+    fclose(file);
+}
+
+// Transaction Processing
+void transactionProcessing() {
+    clearScreen();
+    printf("---------------------------------------------------------\n");
+    printf("-=[ Transaction Process ]=-\n");
+    printf("---------------------------------------------------------\n");
+
+    FILE *file = fopen(FILENAME, "r+");
+    if (!file) {
+        printf("Unable to login at this current time.\n\nPlease check back later!\n");
+        return;
+    }
+
+    char accountNumber[10], pin[7];
+    Account acc;
+    int found = 0, tries = MAX_TRIES;
+
+    printf("Enter account number: ");
+    scanf(" %10s", accountNumber);
+    clearInputBuffer();
+
+    // Validate if account number exists
+    rewind(file); // Reset file pointer to the beginning
+    while (fread(&acc, sizeof(Account), 1, file) == 1) {
+        if (strcmp(acc.accountNumber, accountNumber) == 0) {
             found = 1;
             break;
         }
     }
 
-    if (found) {
-        break;
-    } else {
-      
-        tries++;
-        if (tries < MAX_TRIES) {
-            printf("INVALID PIN! You have %d chance%s left to enter your PIN.\n", MAX_TRIES - tries, (MAX_TRIES - tries > 1) ? "s" : "");
-        }
-    }
-}
-
-// Check if maximum tries exceeded and PIN was incorrect
-if (!found && tries >= MAX_TRIES) {
-    printf("INVALID PIN! Card is captured! Please visit your bank branch to retrieve your card.\n");
-    fclose(file);
-    return;
-}
-
-
     if (!found) {
-        // If we exit the loop without finding a valid account, close the file and return.
+        printf("\nAccount number '%s' not registered. Transaction aborted.\n", accountNumber);
         fclose(file);
         return;
     }
 
+    // Validate PIN
+    while (tries > 0) {
+        printf("Enter PIN: ");
+        scanf("%6s", pin);
+        clearInputBuffer(); // Clear the input buffer
+
+        found = 0;
+        rewind(file);
+        while (fread(&acc, sizeof(Account), 1, file) == 1) {
+            if (strcmp(acc.accountNumber, accountNumber) == 0 && acc.pin == atoi(pin)) {
+                found = 1;
+                break;
+            }
+        }
+
+        if (found) {
+            printf("\n[VALID PIN]: The account belongs to %s\n", acc.accountName);
+            break; // Exit the loop if PIN is valid
+        } else {
+            tries--;
+            if (tries > 0) {
+                printf("[INVALID PIN]: You have %d ", tries);
+                if (tries == 1) {
+                    printf("chance left to enter your PIN.\n");
+                } else {
+                    printf("chances left to enter your PIN.\n");
+                }
+            } else {
+                printf("\nMaximum attempts exceeded. Card is captured!\nPlease visit your bank branch to retrieve your card.\n");
+                fclose(file);
+                return;
+            }
+        }
+    }
+
     char transactionCode;
     double amount;
-
+    printf("-------------------------------------------------------------------------------------\n");
     printf("Enter transaction code (B for Balance Inquiry, D for Deposit, W for Withdrawal): ");
     scanf(" %c", &transactionCode);
+    clearInputBuffer();
+    transactionCode = toupper(transactionCode);
     acc.transactionCode = transactionCode;
-
-
-
 
     switch (transactionCode) {
         case 'B':
-            printf("Account Balance is: %.2f\n", acc.balance);
+            printf("\nAccount Balance:  %.2f\n", acc.balance);
 
             // Prompt for receipt after balance inquiry
             char responseB;
             printf("Do you wish to print a receipt for balance inquiry? (Y for Yes and N for No): ");
             scanf(" %c", &responseB);
-            if (responseB == 'Y' || responseB == 'y') {
+            clearInputBuffer();
+            responseB = toupper(responseB);
+            
+            if (responseB == 'Y') {
                 // Print receipt for balance inquiry
-                printf("\n    =========== RECEIPT ===========\n");
-                printf("\n    Account Number: %s\n", acc.accountNumber);
-                printf("    Account Name: %s\n", acc.accountName);
-                printf("\n    Transaction Type: %c\n", acc.transactionCode);
-                printf("    Transaction Amount: %.2f\n", acc.amount);
-                printf("\n\n\n    New Balance: %.2f\n", acc.balance);
-                printf("\n\n      Thank you for using PUPB! :)\n");
-                printf("    ===============================\n\n");
+                printf("-------------------------------------------------------------------------------------\n");
+                printf("\n=========== RECEIPT ===========\n");
+                printf("\nAccount Number: %s\n", acc.accountNumber);
+                printf("Account Name: %s\n", acc.accountName);
+                printf("\nTransaction Type: %c\n", acc.transactionCode);
+                printf("Transaction Amount: %.2f\n", acc.amount);
+                printf("\n\nNew Balance: %.2f\n", acc.balance);
+                printf("\n\nThank you for using PUPB! :)\n");
+                printf("===============================\n\n");
             }
             break;
         case 'D':
-            printf("Enter deposit amount: ");
-            if (scanf("%lf", &amount) != 1) {
-                printf("Invalid input. Please enter a valid deposit amount.\n");
+            printf("\nEnter deposit amount: ");
+            if (scanf(" %lf", &amount) != 1) {
                 clearInputBuffer();
+                printf("Invalid input. Please enter a valid deposit amount.\n");
                 break;
             }
             acc.amount = amount;
@@ -265,28 +301,32 @@ if (!found && tries >= MAX_TRIES) {
             char responseD;
             printf("Do you wish to print a receipt for deposit? (Y for Yes and N for No): ");
             scanf(" %c", &responseD);
+            clearInputBuffer();
             if (responseD == 'Y' || responseD == 'y') {
                 // Print receipt for deposit
-                printf("\n    =========== RECEIPT ===========\n");
-                printf("\n    Account Number: %s\n", acc.accountNumber);
-                printf("    Account Name: %s\n", acc.accountName);
-                printf("\n    Transaction Type: %c\n", acc.transactionCode);
-                printf("    Transaction Amount: %.2f\n", acc.amount);
-                printf("\n\n\n    Old Balance: %.2f\n", acc.balance - acc.amount);
-                printf("    New Balance: %.2f\n", acc.balance);
-                printf("\n\n      Thank you for using PUPB! :)\n");
-                printf("    ===============================\n\n");
+                printf("-------------------------------------------------------------------------------------\n");
+                printf("\n=========== RECEIPT ===========\n");
+                printf("\nAccount Number: %s\n", acc.accountNumber);
+                printf("Account Name: %s\n", acc.accountName);
+                printf("\nTransaction Type: %c\n", acc.transactionCode);
+                printf("Transaction Amount: %.2f\n", acc.amount);
+                printf("\n\nOld Balance: %.2f\n", acc.balance - acc.amount);
+                printf("New Balance: %.2f\n", acc.balance);
+                printf("\n\nThank you for using PUPB! :)\n");
+                printf("===============================\n\n");
             }
             break;
         case 'W':
-            printf("Enter withdrawal amount: ");
-            if (scanf("%lf", &amount) != 1) {
-                printf("Invalid input. Please enter a valid withdrawal amount.\n");
+            printf("\nEnter withdrawal amount: ");
+            if (scanf(" %lf", &amount) != 1) {
                 clearInputBuffer();
+                printf("Invalid input. Please enter a valid withdrawal amount.\n");
+                pause();
                 break;
             }
             if (amount > acc.balance) {
                 printf("Not enough funds. Transaction is not allowed.\n");
+                pause();
             } else {
                 acc.amount = amount;
                 acc.balance -= amount;
@@ -296,17 +336,19 @@ if (!found && tries >= MAX_TRIES) {
                 char responseW;
                 printf("Do you wish to print a receipt for withdrawal? (Y for Yes and N for No): ");
                 scanf(" %c", &responseW);
+                clearInputBuffer();
                 if (responseW == 'Y' || responseW == 'y') {
                     // Print receipt for withdrawal
-                    printf("\n    =========== RECEIPT ===========\n");
-                    printf("\n    Account Number: %s\n", acc.accountNumber);
-                    printf("    Account Name: %s\n", acc.accountName);
-                    printf("\n    Transaction Type: %c\n", acc.transactionCode);
-                    printf("    Transaction Amount: %.2f\n", acc.amount);
-                    printf("\n\n\n    Old Balance: %.2f\n", acc.balance + acc.amount);
-                    printf("    New Balance: %.2f\n", acc.balance);
-                    printf("\n\n      Thank you for using PUPB! :)\n");
-                    printf("    ===============================\n\n");
+                    printf("-------------------------------------------------------------------------------------\n");
+                    printf("\n=========== RECEIPT ===========\n");
+                    printf("\nAccount Number: %s\n", acc.accountNumber);
+                    printf("Account Name: %s\n", acc.accountName);
+                    printf("\nTransaction Type: %c\n", acc.transactionCode);
+                    printf("Transaction Amount: %.2f\n", acc.amount);
+                    printf("\n\nOld Balance: %.2f\n", acc.balance + acc.amount);
+                    printf("New Balance: %.2f\n", acc.balance);
+                    printf("\n\nThank you for using PUPB! :)\n");
+                    printf("===============================\n\n");
                 }
             }
             break;
@@ -326,6 +368,7 @@ if (!found && tries >= MAX_TRIES) {
 
 // Print Records
 void printRecords() {
+    clearScreen();
     FILE *file = fopen(FILENAME, "rb");
     if (!file) {
         perror("Error opening file");
@@ -333,11 +376,14 @@ void printRecords() {
     }
 
     Account acc;
-    printf("\nAccount Number    Account Name             Account Type          Account Balance\n");
+    printf("Account Number    Account Name             Account Type          Account Balance\n");
     printf("-------------------------------------------------------------------------------------\n");
     while (fread(&acc, sizeof(Account), 1, file)) {
         printf("%-17s %-25s %-20s %10.2f\n", acc.accountNumber, acc.accountName, acc.accountType, acc.balance);
     }
+    printf("-------------------------------------------------------------------------------------\n");
+
+    printf("\n");
 
     fclose(file);
 }
