@@ -16,8 +16,8 @@
 
 // Struct definition
 typedef struct Account {
-    char accountNumber[10];    // Account Number
-    char accountName[25];      // Account Name 
+    char accountNumber[11];    // Account Number
+    char accountName[26];      // Account Name 
     int pin;                   // Account PIN
     double deposit;            // Initial deposit
     char transactionCode;      // B for Balance, D for Deposit, and W for Withdraw
@@ -116,13 +116,20 @@ void createAccounts() {
     printf("---------------------------------------------------------\n");
     printf("-=[ Account Creation ]=-\n");
     printf("---------------------------------------------------------\n");
-    printf("(type 'end' to finish)\n");
     printf("\nEnter Account Number: ");
     scanf(" %10s", acc.accountNumber);
     clearInputBuffer();
 
     if (strcmp(acc.accountNumber, "end") == 0) {
         fclose(file);
+        return;
+    }
+
+    // Validate account number length
+    if (strlen(acc.accountNumber) > 10) {
+        printf("\n[ Invalid Account Number ]\n(Maximum length is 10 characters)\n\n");
+        fclose(file);
+        pause();
         return;
     }
 
@@ -151,7 +158,7 @@ void createAccounts() {
             validInput = scanf("%d", &acc.pin);
             clearInputBuffer();
 
-            if (validInput == 0) {
+            if (validInput == 0) {  
                 printf("\n[ Invalid PIN ]\n\n");
             }
         } while(!validInput);
@@ -167,9 +174,25 @@ void createAccounts() {
             }
         } while(!validInput);
 
-        printf("Enter account type (savings, checking, or investment): ");
-        scanf(" %19s", acc.accountType);
-        clearInputBuffer();
+        do {
+            printf("Enter account type (savings, checking, or investment): ");
+            scanf(" %19s", acc.accountType);
+            clearInputBuffer();
+
+            // Convert input to lowercase for case-insensitive comparison
+            for (int i = 0; acc.accountType[i]; i++) {
+                acc.accountType[i] = tolower(acc.accountType[i]);
+            }
+
+            if (strcmp(acc.accountType, "savings") != 0 &&
+                strcmp(acc.accountType, "checking") != 0 &&
+                strcmp(acc.accountType, "investment") != 0) {
+                printf("\n[ Invalid Account Type ]\n(Please enter 'savings', 'checking', or 'investment'.)\n\n");
+                validInput = 0;
+            } else {
+                validInput = 1;
+            }
+        } while (!validInput);
 
         acc.balance = acc.deposit;
         acc.transactionCode = 'B';
@@ -195,8 +218,8 @@ void transactionProcessing() {
         return;
     }
 
-    char accountNumber[10], pin[7];
     Account acc;
+    char accountNumber[sizeof(acc.accountNumber)], pin[7];
     int found = 0, tries = MAX_TRIES;
 
     printf("Enter account number: ");
@@ -405,12 +428,12 @@ void printRecords() {
     }
 
     Account acc;
-    printf("Account Number    Account Name             Account Type          Account Balance\n");
-    printf("-------------------------------------------------------------------------------------\n");
+    printf("Account Number\t\tAccount Name\t\tAccount Type\t\tAccount Balance\n");
+    printf("---------------------------------------------------------------------------------------\n");
     while (fread(&acc, sizeof(Account), 1, file)) {
-        printf("%-17s %-25s %-20s %10.2f\n", acc.accountNumber, acc.accountName, acc.accountType, acc.balance);
+        printf("%-10s\t\t%-25s%-20s\t%10.2lf\n", acc.accountNumber, acc.accountName, acc.accountType, acc.balance);
     }
-    printf("-------------------------------------------------------------------------------------\n");
+    printf("---------------------------------------------------------------------------------------\n");
 
     printf("\n");
 
