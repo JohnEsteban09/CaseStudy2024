@@ -70,6 +70,7 @@ void transactionInterface();
 void mainMenu();
 void adminMenu();
 
+void createAdminFile();
 void adminLogin();
 
 void deleteAllUserAccounts();
@@ -233,6 +234,17 @@ void adminMenu() {
 }
 
 
+void createAdminFile() {
+    FILE *file = fopen(ADMIN_FILE, "w");
+    if (file) {
+        fprintf(file, "admin admin123\n");
+        fclose(file);
+    } else {
+        printf("[ERROR]: Could not create %s file.\n", ADMIN_FILE);
+    }
+}
+
+
 void adminLogin() {
     char storedUsername[50];
     char storedPassword[50];
@@ -244,7 +256,9 @@ void adminLogin() {
     // Open the admin.txt file for reading
     FILE *file = fopen(ADMIN_FILE, "r");
     if (!file) {
-        printf("\n[ERROR]: Could not open %s file.\n", ADMIN_FILE);
+        printf("[INFO]: %s file not found. Creating default admin credentials.\n", ADMIN_FILE);
+        createAdminFile();
+        printf("[INFO]: Default credentials created. Please try logging in again.\n");
         return;
     }
 
@@ -274,13 +288,13 @@ void adminLogin() {
     if (strcmp(storedUsername, inputUsername) == 0 && strcmp(storedPassword, inputPassword) == 0) {
         printf("\nAdmin logged in successfully!\n");
         printf("---------------------------------------------------------\n");
-        pause();
+        // Assuming pause() function implementation or similar functionality
+        // pause();
         adminMenu(); // Assuming adminMenu() function handles further admin operations
     } else {
         printf("\nAdmin login failed.\n");
     }
 }
-
 
 void deleteAllUserAccounts() {
     printf("-------------------------------------------------------------------------------------\n");
