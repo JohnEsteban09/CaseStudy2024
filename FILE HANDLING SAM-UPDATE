@@ -122,6 +122,7 @@ void pause() {
 
 
 void mainInterface() {
+    clearScreen();
     printf("---------------------------------------------------------\n");
     printf("|      [ Welcome to PUP Bank Quezon City Branch! ]      |\n");
     printf("---------------------------------------------------------\n");
@@ -134,6 +135,7 @@ void mainInterface() {
 }
 
 void adminInterface() {
+    clearScreen();
     printf("-------------------------------------------------------------------------------------\n");
     printf("|                                [ Admin Menu ]                                     |\n");
     printf("-------------------------------------------------------------------------------------\n");
@@ -146,6 +148,7 @@ void adminInterface() {
 }
 
 void transactionInterface() {
+    clearScreen();
     printf("-------------------------------------------------------------------------------------\n");
     printf("|                                [ Transaction Menu ]                                |\n");
     printf("-------------------------------------------------------------------------------------\n");
@@ -617,6 +620,7 @@ void balanceInquiry() {
     
     if (receiptChoice == 'Y') {
         printReceipt();
+        clearScreen();
     }
 }
 
@@ -663,6 +667,7 @@ void deposit() {
     clearInputBuffer();
     if (receiptChoice == 'Y' || receiptChoice == 'y') {
         printReceipt();
+        clearScreen();
     }
 }
 
@@ -705,6 +710,7 @@ void withdrawal() {
     clearInputBuffer();
     if (receiptChoice == 'Y' || receiptChoice == 'y') {
         printReceipt();
+        clearScreen();
     }
 }
 
