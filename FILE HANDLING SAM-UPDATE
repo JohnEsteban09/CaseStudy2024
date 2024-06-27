@@ -37,8 +37,6 @@ FEATURES ADDED / CHANGES DONE (SINCE JUNE 26):
 */
 
 
-
-
 #define DATABASE "PUPACCOUNTS.DAT"       // Data of the Users
 #define MAX_TRIES 3                      // Maximum number of input retries
 #define MAX_ACCOUNT_NUMBER_LENGTH 10     // Maximum length for account number
@@ -185,7 +183,7 @@ void mainMenu() {
                 printf("--------------------------------------------------------");
                 return;
             default:
-                printf("\n[Invalid Choice]: Enter a number from 1 to 4\n");
+                printf("\n[INVALID CHOICE]: Enter a number from 1 to 4\n");
                 break;
         }
         printf("---------------------------------------------------------");
@@ -221,7 +219,7 @@ void adminMenu() {
                 printf("\nExiting admin menu...\n");
                 return;
             default:
-                printf("\n[Invalid Choice]: Enter a number from 1 to 5\n");
+                printf("\n[INVALID CHOICE]: Enter a number from 1 to 5\n");
         }
         printf("---------------------------------------------------------");
         pause();
@@ -230,52 +228,35 @@ void adminMenu() {
 
 
 void deleteAllUserAccounts() {
-    clearScreen();
-
-    printf("Are you sure you want to delete all user accounts? (Y for Yes and N for No): ");
+    printf("-------------------------------------------------------------------------------------\n");
+    printf("Are you sure you want to delete all user accounts? (Y / N): ");
     char confirm;
     scanf("%c", &confirm);
-    getchar();  // Clear newline character from input buffer
+    clearInputBuffer();
 
-    if (tolower(confirm) != 'y') {
-        printf("Deletion of all accounts canceled.\n");
+    if (toupper(confirm) != 'Y') {
+        printf("\nDeletion of all accounts canceled.\n");
         return;
     }
 
-    FILE *file = fopen(DATABASE, "rb");
+    FILE *file = fopen(DATABASE, "wb");
     if (!file) {
         printf("Error opening file.\n");
         return;
     }
 
-    Account acc;
-    FILE *tempFile = fopen("TEMP.DAT", "wb");
-    if (!tempFile) {
-        printf("Error creating temp file.\n");
-        fclose(file);
-        return;
-    }
-
-    while (fread(&acc, sizeof(Account), 1, file)) {
-        if (!acc.isCaptured) {
-            fwrite(&acc, sizeof(Account), 1, tempFile);
-        }
-    }
-
+    // File is opened in write mode, which clears its contents.
     fclose(file);
-    fclose(tempFile);
-    remove(DATABASE);
 
-        rename("TEMP.DAT", DATABASE);
-        printf("All user accounts deleted successfully.\n");
-        return;
+    printf("All user accounts deleted successfully.\n");
 }
 
 void deleteSpecificAccount() {
-    clearScreen();
+    printf("-------------------------------------------------------------------------------------\n");
+
     FILE *file = fopen(DATABASE, "r+b");
     if (!file) {
-        printf("Error opening file.\n");
+        printf("\nError opening file.\n");
         return;
     }
 
@@ -287,7 +268,7 @@ void deleteSpecificAccount() {
     Account acc;
     FILE *tempFile = fopen("TEMP.DAT", "wb");
     if (!tempFile) {
-        printf("Error creating temp file.\n");
+        printf("\nError creating temp file.\n");
         fclose(file);
         return;
     }
@@ -296,15 +277,15 @@ void deleteSpecificAccount() {
     while (fread(&acc, sizeof(Account), 1, file)) {
         if (strcmp(acc.accountNumber, accountNumber) == 0) {
             accountFound = true;
-            printf("Are you sure you want to delete account %s? (y/n): ", accountNumber);
+            printf("\nAre you sure you want to delete account %s? (y/n): ", accountNumber);
             char confirm;
             scanf("%c", &confirm);
             getchar();  // Clear newline character from input buffer
             if (tolower(confirm) != 'y') {
                 fwrite(&acc, sizeof(Account), 1, tempFile);
-                printf("Account deletion canceled.\n");
+                printf("\nAccount deletion canceled.\n");
             } else {
-                printf("Account %s deleted successfully.\n", accountNumber);
+                printf("\nAccount %s deleted successfully.\n", accountNumber);
             }
         } else {
             fwrite(&acc, sizeof(Account), 1, tempFile);
@@ -312,7 +293,7 @@ void deleteSpecificAccount() {
     }
 
     if (!accountFound) {
-        printf("Account with number %s not found.\n", accountNumber);
+        printf("\nAccount with number %s not found.\n", accountNumber);
     }
 
     fclose(file);
@@ -827,10 +808,17 @@ void printRecords() {
     }
 
     Account acc;
+    int recordFound = 0; // Flag to check if there are any records
+
     printf("Account Number\t\tAccount Name\t\tAccount Type\t\tAccount Balance\n");
     printf("-------------------------------------------------------------------------------------------------\n");
     while (fread(&acc, sizeof(Account), 1, file)) {
         printf("%-24s%-24s%-23s%10.2lf\n", acc.accountNumber, acc.accountName, acc.accountType, acc.balance);
+        recordFound = 1;
+    }
+
+    if (!recordFound) {
+        printf("No records found.\n");
     }
     printf("----------------------------------------");
 
