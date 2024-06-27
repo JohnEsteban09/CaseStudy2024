@@ -305,7 +305,7 @@ void deleteSpecificAccount() {
 
 
 void changeUserPIN() {  
-    clearScreen();
+    printf("-------------------------------------------------------------------------------------\n");
 
     FILE *file = fopen(DATABASE, "r+b");
     if (!file) {
@@ -332,13 +332,13 @@ void changeUserPIN() {
             fseek(file, -sizeof(Account), SEEK_CUR);
             fwrite(&acc, sizeof(Account), 1, file);
             accountFound = true;
-            printf("PIN changed successfully for account: %s\n", accountNumber);
+            printf("\nPIN changed successfully for account: %s\n", accountNumber);
             break;
         }
     }
 
     if (!accountFound) {
-        printf("Account with account number %s not found.\n", accountNumber);
+        printf("\nAccount with account number %s not found.\n", accountNumber);
     }
 
     fclose(file);
