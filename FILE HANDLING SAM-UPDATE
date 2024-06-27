@@ -38,6 +38,7 @@ FEATURES ADDED / CHANGES DONE (SINCE JUNE 26):
 
 
 #define DATABASE "PUPACCOUNTS.DAT"       // Data of the Users
+#define ADMIN_FILE "admin.txt"  // Define admin credentials file
 #define MAX_TRIES 3                      // Maximum number of input retries
 #define MAX_ACCOUNT_NUMBER_LENGTH 10     // Maximum length for account number
 #define MAX_ACCOUNT_NAME_LENGTH 25       // Maximum length for account name
@@ -68,6 +69,8 @@ void adminInterface();
 void transactionInterface();
 void mainMenu();
 void adminMenu();
+
+void adminLogin();
 
 void deleteAllUserAccounts();
 void deleteSpecificAccount();
@@ -179,7 +182,7 @@ void mainMenu() {
                 accessAccount();
                 break;
             case 3:
-                adminMenu();
+                adminLogin();
                 break;
             case 4:
                 printf("\n[PROGRAM TERMINATED]\n");
@@ -226,6 +229,55 @@ void adminMenu() {
         }
         printf("---------------------------------------------------------");
         pause();
+    }
+}
+
+
+void adminLogin() {
+    char storedUsername[50];
+    char storedPassword[50];
+    char inputUsername[50];
+    char inputPassword[50];
+
+    printf("---------------------------------------------------------\n");
+
+    // Open the admin.txt file for reading
+    FILE *file = fopen(ADMIN_FILE, "r");
+    if (!file) {
+        printf("\n[ERROR]: Could not open %s file.\n", ADMIN_FILE);
+        return;
+    }
+
+    // Read username and password from file
+    if (fscanf(file, "%49s %49s", storedUsername, storedPassword) != 2) {
+        printf("\n[ERROR]: Invalid data in %s file.\n", ADMIN_FILE);
+        fclose(file);
+        return;
+    }
+
+    fclose(file);
+
+    // Prompt for username and password
+    printf("Enter admin username: ");
+    if (scanf("%49s", inputUsername) != 1) {
+        printf("\n[ERROR]: Failed to read username.\n");
+        return;
+    }
+
+    printf("Enter admin password: ");
+    if (scanf("%49s", inputPassword) != 1) {
+        printf("\n[ERROR]: Failed to read password.\n");
+        return;
+    }
+
+    // Compare input with stored credentials
+    if (strcmp(storedUsername, inputUsername) == 0 && strcmp(storedPassword, inputPassword) == 0) {
+        printf("\nAdmin logged in successfully!\n");
+        printf("---------------------------------------------------------\n");
+        pause();
+        adminMenu(); // Assuming adminMenu() function handles further admin operations
+    } else {
+        printf("\nAdmin login failed.\n");
     }
 }
 
