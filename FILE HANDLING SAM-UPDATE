@@ -81,7 +81,7 @@ void balanceInquiry();
 void deposit();
 void withdrawal();
 
-void generateReceipt();
+void generateReceipt(Account *account);
 void printReceipt();
 
 void printRecords();
@@ -231,7 +231,7 @@ void deleteAllUserAccounts() {
     printf("-------------------------------------------------------------------------------------\n");
     printf("Are you sure you want to delete all user accounts? (Y / N): ");
     char confirm;
-    scanf("%c", &confirm);
+    scanf(" %c", &confirm);
     clearInputBuffer();
 
     if (toupper(confirm) != 'Y') {
@@ -250,6 +250,7 @@ void deleteAllUserAccounts() {
 
     printf("All user accounts deleted successfully.\n");
 }
+
 
 void deleteSpecificAccount() {
     printf("-------------------------------------------------------------------------------------\n");
@@ -279,8 +280,8 @@ void deleteSpecificAccount() {
             accountFound = true;
             printf("\nAre you sure you want to delete account %s? (y/n): ", accountNumber);
             char confirm;
-            scanf("%c", &confirm);
-            getchar();  // Clear newline character from input buffer
+            scanf(" %c", &confirm);
+            clearInputBuffer();
             if (tolower(confirm) != 'y') {
                 fwrite(&acc, sizeof(Account), 1, tempFile);
                 printf("\nAccount deletion canceled.\n");
@@ -299,8 +300,9 @@ void deleteSpecificAccount() {
     fclose(file);
     fclose(tempFile);
     remove(DATABASE);
-    rename("TEMP.DAT", DATABASE);
+    rename("TEMP.DAT", DATABASE);  // Replace the original file with the temp file
 }
+
 
 void changeUserPIN() {  
     clearScreen();
@@ -707,7 +709,7 @@ void withdrawal() {
 }
 
 
-void generateReceipt() {
+void generateReceipt(Account *account) {
     FILE *receiptFile;
     char maskedAccountNumber[MAX_ACCOUNT_NUMBER_LENGTH + 1];
     int visibleDigits = 0; // Number of visible digits to hide PII information based on account number length 
@@ -813,7 +815,7 @@ void printRecords() {
     printf("Account Number\t\tAccount Name\t\tAccount Type\t\tAccount Balance\n");
     printf("-------------------------------------------------------------------------------------------------\n");
     while (fread(&acc, sizeof(Account), 1, file)) {
-        printf("%-24s%-24s%-23s%10.2lf\n", acc.accountNumber, acc.accountName, acc.accountType, acc.balance);
+        printf("%-24s%-24s%-22s%10.2lf\n", acc.accountNumber, acc.accountName, acc.accountType, acc.balance);
         recordFound = 1;
     }
 
